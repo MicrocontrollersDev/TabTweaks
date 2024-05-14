@@ -1,0 +1,53 @@
+{
+	"schemaVersion": 1,
+	"id": "tabtweaks",
+	"version": "${version}",
+	"name": "Tab Tweaks",
+	"description": "Improvements to Minecraft's Tab HUD",
+	"authors": [
+		"Microcontrollers"
+	],
+	"contributors": [
+		"Wyvest",
+		"Mixces",
+		"Ownwn",
+		"Squagward",
+		"nextdayy"
+
+	],
+	"contact": {
+		"homepage": "https://modrinth.com/mod/tabtweaks",
+		"sources": "https://github.com/MicrocontrollersDev/TabTweaks",
+		"issues": "https://github.com/MicrocontrollersDev/TabTweaks/issues"
+	},
+	"license": "LGPLv3",
+	"icon": "assets/tabtweaks/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"main": [
+			"dev.microcontrollers.tabtweaks.TabTweaks"
+		],
+		"modmenu": [
+			"dev.microcontrollers.tabtweaks.config.ModMenuIntegration"
+		]
+	},
+	"mixins": [
+		"tabtweaks.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.14",
+		"minecraft": ">=1.20 <=1.20.6",
+		"java": ">=17",
+		"fabric-api": "*",
+		"yet_another_config_lib_v3": "*"
+	},
+	"custom": {
+		"modmenu": {
+			"links": {
+				"modmenu.discord": "https://discord.gg/rejfv9kFJj",
+				"modmenu.modrinth": "https://modrinth.com/mod/tabtweaks"
+			},
+			"update_checker": true
+		}
+	}
+}
