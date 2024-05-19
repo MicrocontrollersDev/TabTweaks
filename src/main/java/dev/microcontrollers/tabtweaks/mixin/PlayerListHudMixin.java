@@ -1,6 +1,7 @@
 package dev.microcontrollers.tabtweaks.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import dev.microcontrollers.tabtweaks.Shifter;
 import dev.microcontrollers.tabtweaks.config.TabTweaksConfig;
 import net.minecraft.client.MinecraftClient;
@@ -9,13 +10,13 @@ import net.minecraft.client.gui.hud.PlayerListHud;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.scoreboard.ScoreboardObjective;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerListHud.class)
@@ -23,6 +24,8 @@ public class PlayerListHudMixin {
     @Shadow
     @Final
     private MinecraftClient client;
+    @Shadow @Nullable private Text header;
+    @Shadow @Nullable private Text footer;
 
     @ModifyExpressionValue(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/GameOptions;getTextBackgroundColor(I)I"))
     private int modifyTabColor(int opacity) {
@@ -61,6 +64,28 @@ public class PlayerListHudMixin {
     @ModifyConstant(method = "collectPlayerEntries", constant = @Constant(longValue = 80L))
     private long increasePlayerCount(long constant) {
         return TabTweaksConfig.CONFIG.instance().maxTabPlayers;
+    }
+
+    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/PlayerSkinDrawer;draw(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/util/Identifier;IIIZZ)V"))
+    private boolean removeHeadRendering(DrawContext context, Identifier texture, int x, int y, int size, boolean hatVisible, boolean upsideDown) {
+        return !TabTweaksConfig.CONFIG.instance().removeHeads;
+    }
+
+    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/PlayerListHud;renderLatencyIcon(Lnet/minecraft/client/gui/DrawContext;IIILnet/minecraft/client/network/PlayerListEntry;)V"))
+    private boolean removeLatencyRendering(PlayerListHud instance, DrawContext context, int width, int x, int y, PlayerListEntry entry) {
+        return !TabTweaksConfig.CONFIG.instance().removePing;
+    }
+
+    @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithShadow(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/Text;III)I"), index = 2)
+    private int modifyNamePosition(int x) {
+        if (TabTweaksConfig.CONFIG.instance().removeHeads) return x - 8;
+        return x;
+    }
+
+    @Inject(method = "render", at = @At("HEAD"))
+    private void removeHeaderAndFooter(DrawContext context, int scaledWindowWidth, Scoreboard scoreboard, ScoreboardObjective objective, CallbackInfo ci) {
+        if (TabTweaksConfig.CONFIG.instance().removeHeader) this.header = null;
+        if (TabTweaksConfig.CONFIG.instance().removeFooter) this.footer = null;
     }
 
 }

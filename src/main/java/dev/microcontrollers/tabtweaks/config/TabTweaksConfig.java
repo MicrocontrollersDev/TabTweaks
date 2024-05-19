@@ -25,6 +25,10 @@ public class TabTweaksConfig {
     @SerialEntry public Color tabPlayerListColor = new Color(255, 255, 255, 32);
     @SerialEntry public float moveTabDown = 10F;
     @SerialEntry public boolean moveTabBelowBossBars = false;
+    @SerialEntry public boolean removeHeads = false;
+    @SerialEntry public boolean removeHeader = false;
+    @SerialEntry public boolean removeFooter = false;
+    @SerialEntry public boolean removePing = false;
     @SerialEntry public boolean showPingInTab = false;
     @SerialEntry public boolean scalePingDisplay = false;
     @SerialEntry public boolean hideFalsePing = false;
@@ -67,6 +71,30 @@ public class TabTweaksConfig {
                             .name(Text.literal("Move Tab List Below Bossbars"))
                             .description(OptionDescription.of(Text.of("Moves the tab list below all bossbars. This will take priority over the \"Move Tab List Down\" setting.")))
                             .binding(defaults.moveTabBelowBossBars, () -> config.moveTabBelowBossBars, newVal -> config.moveTabBelowBossBars = newVal)
+                            .controller(TickBoxControllerBuilder::create)
+                            .build())
+                    .option(Option.createBuilder(boolean.class)
+                            .name(Text.literal("Remove Player Heads"))
+                            .description(OptionDescription.of(Text.of("Remove player heads from the tab list.")))
+                            .binding(defaults.removeHeads, () -> config.removeHeads, newVal -> config.removeHeads = newVal)
+                            .controller(TickBoxControllerBuilder::create)
+                            .build())
+                    .option(Option.createBuilder(boolean.class)
+                            .name(Text.literal("Remove Header"))
+                            .description(OptionDescription.of(Text.of("Remove tab list header.")))
+                            .binding(defaults.removeHeader, () -> config.removeHeader, newVal -> config.removeHeader = newVal)
+                            .controller(TickBoxControllerBuilder::create)
+                            .build())
+                    .option(Option.createBuilder(boolean.class)
+                            .name(Text.literal("Remove Footer"))
+                            .description(OptionDescription.of(Text.of("Remove the tab list footer.")))
+                            .binding(defaults.removeFooter, () -> config.removeFooter, newVal -> config.removeFooter = newVal)
+                            .controller(TickBoxControllerBuilder::create)
+                            .build())
+                    .option(Option.createBuilder(boolean.class)
+                            .name(Text.literal("Remove Ping"))
+                            .description(OptionDescription.of(Text.of("Remove ping from the tab list.")))
+                            .binding(defaults.removePing, () -> config.removePing, newVal -> config.removePing = newVal)
                             .controller(TickBoxControllerBuilder::create)
                             .build())
                     .option(Option.createBuilder(boolean.class)
