@@ -2,6 +2,8 @@ package dev.microcontrollers.tabtweaks.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.microcontrollers.tabtweaks.Shifter;
 import dev.microcontrollers.tabtweaks.config.TabTweaksConfig;
 import net.minecraft.client.MinecraftClient;
@@ -12,7 +14,7 @@ import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.scoreboard.ScoreboardObjective;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -24,12 +26,25 @@ public class PlayerListHudMixin {
     @Shadow
     @Final
     private MinecraftClient client;
-    @Shadow @Nullable private Text header;
-    @Shadow @Nullable private Text footer;
 
     @ModifyExpressionValue(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/GameOptions;getTextBackgroundColor(I)I"))
-    private int modifyTabColor(int opacity) {
+    private int modifyTabPlayerWidgetColor(int color) {
         return TabTweaksConfig.CONFIG.instance().tabPlayerListColor.getRGB();
+    }
+
+    @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;fill(IIIII)V", ordinal = 0), index = 4)
+    private int modifyTabHeaderColor(int color) {
+        return TabTweaksConfig.CONFIG.instance().tabHeaderColor.getRGB();
+    }
+
+    @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;fill(IIIII)V", ordinal = 1), index = 4)
+    private int modifyTabBodyColor(int color) {
+        return TabTweaksConfig.CONFIG.instance().tabBodyColor.getRGB();
+    }
+
+    @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;fill(IIIII)V", ordinal = 3), index = 4)
+    private int modifyTabFooterColor(int color) {
+        return TabTweaksConfig.CONFIG.instance().tabFooterColor.getRGB();
     }
 
     @Inject(method = "renderLatencyIcon", at = @At("HEAD"), cancellable = true)
@@ -82,10 +97,16 @@ public class PlayerListHudMixin {
         return x;
     }
 
-    @Inject(method = "render", at = @At("HEAD"))
-    private void removeHeaderAndFooter(DrawContext context, int scaledWindowWidth, Scoreboard scoreboard, ScoreboardObjective objective, CallbackInfo ci) {
-        if (TabTweaksConfig.CONFIG.instance().removeHeader) this.header = null;
-        if (TabTweaksConfig.CONFIG.instance().removeFooter) this.footer = null;
+    @WrapOperation(method = "render", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/hud/PlayerListHud;header:Lnet/minecraft/text/Text;", ordinal = 0, opcode = Opcodes.GETFIELD))
+    private Text removeHeader(PlayerListHud instance, Operation<Text> original) {
+        if (TabTweaksConfig.CONFIG.instance().removeHeader) return null;
+        return original.call(instance);
+    }
+
+    @WrapOperation(method = "render", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/hud/PlayerListHud;footer:Lnet/minecraft/text/Text;", ordinal = 0, opcode = Opcodes.GETFIELD))
+    private Text removeFooter(PlayerListHud instance, Operation<Text> original) {
+        if (TabTweaksConfig.CONFIG.instance().removeFooter) return null;
+        return original.call(instance);
     }
 
 }
