@@ -84,7 +84,7 @@ public class TabTweaksConfig {
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .option(Option.createBuilder(boolean.class)
-                                        .name(Text.literal("Improved Player Heads"))
+                                        .name(Text.literal("Improved Player Head Hats"))
                                         .description(OptionDescription.of(Text.of("Show the full hat layer when rendering the head.")))
                                         .binding(defaults.improvedHeads, () -> config.improvedHeads, newVal -> config.improvedHeads = newVal)
                                         .controller(TickBoxControllerBuilder::create)

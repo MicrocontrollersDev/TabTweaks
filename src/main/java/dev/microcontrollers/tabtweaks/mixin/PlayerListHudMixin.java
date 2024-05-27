@@ -91,6 +91,8 @@ public class PlayerListHudMixin {
         return !TabTweaksConfig.CONFIG.instance().removeHeads;
     }
 
+    // This is heavily inspired by VanillaHUD shout-out to ImToggle because I basically stole his idea
+    // https://github.com/Polyfrost/VanillaHUD
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/PlayerSkinDrawer;draw(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/util/Identifier;IIIZZ)V"))
     private void betterHatLayer(DrawContext context, Identifier texture, int x, int y, int size, boolean hatVisible, boolean upsideDown, Operation<Void> original) {
         if (TabTweaksConfig.CONFIG.instance().improvedHeads) {
