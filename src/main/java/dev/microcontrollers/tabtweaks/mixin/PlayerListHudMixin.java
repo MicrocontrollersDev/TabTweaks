@@ -20,6 +20,7 @@ import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -28,6 +29,8 @@ public class PlayerListHudMixin {
     @Shadow
     @Final
     private MinecraftClient client;
+    @Unique
+    PlayerSkinDrawer playerSkinDrawer = new PlayerSkinDrawer();
 
     @ModifyExpressionValue(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/GameOptions;getTextBackgroundColor(I)I"))
     private int modifyTabPlayerWidgetColor(int color) {
@@ -91,7 +94,6 @@ public class PlayerListHudMixin {
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/PlayerSkinDrawer;draw(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/util/Identifier;IIIZZ)V"))
     private void betterHatLayer(DrawContext context, Identifier texture, int x, int y, int size, boolean hatVisible, boolean upsideDown, Operation<Void> original) {
         if (TabTweaksConfig.CONFIG.instance().improvedHeads) {
-            PlayerSkinDrawer playerSkinDrawer = new PlayerSkinDrawer();
             ((Head) playerSkinDrawer).tabTweaks$draw(context, texture, x, y, size, hatVisible, upsideDown);
         } else {
             original.call(context, texture, x, y, size, hatVisible, upsideDown);
