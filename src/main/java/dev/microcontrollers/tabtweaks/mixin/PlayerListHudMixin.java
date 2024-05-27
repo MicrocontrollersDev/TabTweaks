@@ -4,10 +4,12 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import dev.microcontrollers.tabtweaks.Head;
 import dev.microcontrollers.tabtweaks.Shifter;
 import dev.microcontrollers.tabtweaks.config.TabTweaksConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.PlayerSkinDrawer;
 import net.minecraft.client.gui.hud.PlayerListHud;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.scoreboard.Scoreboard;
@@ -84,6 +86,16 @@ public class PlayerListHudMixin {
     @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/PlayerSkinDrawer;draw(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/util/Identifier;IIIZZ)V"))
     private boolean removeHeadRendering(DrawContext context, Identifier texture, int x, int y, int size, boolean hatVisible, boolean upsideDown) {
         return !TabTweaksConfig.CONFIG.instance().removeHeads;
+    }
+
+    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/PlayerSkinDrawer;draw(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/util/Identifier;IIIZZ)V"))
+    private void betterHatLayer(DrawContext context, Identifier texture, int x, int y, int size, boolean hatVisible, boolean upsideDown, Operation<Void> original) {
+        if (TabTweaksConfig.CONFIG.instance().improvedHeads) {
+            PlayerSkinDrawer playerSkinDrawer = new PlayerSkinDrawer();
+            ((Head) playerSkinDrawer).tabTweaks$draw(context, texture, x, y, size, hatVisible, upsideDown);
+        } else {
+            original.call(context, texture, x, y, size, hatVisible, upsideDown);
+        }
     }
 
     @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/PlayerListHud;renderLatencyIcon(Lnet/minecraft/client/gui/DrawContext;IIILnet/minecraft/client/network/PlayerListEntry;)V"))

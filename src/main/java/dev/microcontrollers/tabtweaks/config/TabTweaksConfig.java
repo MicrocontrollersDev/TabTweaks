@@ -25,6 +25,7 @@ public class TabTweaksConfig {
     @SerialEntry public boolean removeHeader = false;
     @SerialEntry public boolean removeFooter = false;
     @SerialEntry public boolean removeHeads = false;
+    @SerialEntry public boolean improvedHeads = true;
     @SerialEntry public boolean removePing = false;
     @SerialEntry public boolean showPingInTab = false;
     @SerialEntry public boolean scalePingDisplay = false;
@@ -80,6 +81,12 @@ public class TabTweaksConfig {
                                         .name(Text.literal("Remove Player Heads"))
                                         .description(OptionDescription.of(Text.of("Remove player heads from the tab list.")))
                                         .binding(defaults.removeHeads, () -> config.removeHeads, newVal -> config.removeHeads = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
+                                        .build())
+                                .option(Option.createBuilder(boolean.class)
+                                        .name(Text.literal("Improved Player Heads"))
+                                        .description(OptionDescription.of(Text.of("Show the full hat layer when rendering the head.")))
+                                        .binding(defaults.improvedHeads, () -> config.improvedHeads, newVal -> config.improvedHeads = newVal)
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .option(Option.createBuilder(boolean.class)
