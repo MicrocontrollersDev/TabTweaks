@@ -10,8 +10,7 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(PlayerSkinDrawer.class)
 public abstract class PlayerSkinDrawerMixin implements Head {
     @Shadow
-    private static void drawHat(DrawContext context, Identifier texture, int x, int y, int size, boolean upsideDown) {
-    }
+    private static void drawHat(DrawContext context, Identifier texture, int x, int y, int size, boolean upsideDown) { }
 
     @Override
     public void tabTweaks$draw(DrawContext context, Identifier texture, int x, int y, int size, boolean hatVisible, boolean upsideDown) {

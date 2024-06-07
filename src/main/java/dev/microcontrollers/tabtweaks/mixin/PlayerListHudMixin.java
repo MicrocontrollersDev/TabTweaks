@@ -8,12 +8,14 @@ import dev.microcontrollers.tabtweaks.Head;
 import dev.microcontrollers.tabtweaks.Shifter;
 import dev.microcontrollers.tabtweaks.config.TabTweaksConfig;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.PlayerSkinDrawer;
 import net.minecraft.client.gui.hud.PlayerListHud;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.scoreboard.ScoreboardObjective;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.objectweb.asm.Opcodes;
@@ -81,8 +83,8 @@ public class PlayerListHudMixin {
         context.getMatrices().translate(0, distance, 0);
     }
 
-    @ModifyConstant(method = "collectPlayerEntries", constant = @Constant(longValue = 80L))
-    private long increasePlayerCount(long constant) {
+    @ModifyExpressionValue(method = "collectPlayerEntries", at = @At(value = "CONSTANT", args = "longValue=80"))
+    private long changePlayerCount(long original) {
         return TabTweaksConfig.CONFIG.instance().maxTabPlayers;
     }
 
@@ -123,6 +125,24 @@ public class PlayerListHudMixin {
     private Text removeFooter(PlayerListHud instance, Operation<Text> original) {
         if (TabTweaksConfig.CONFIG.instance().removeFooter) return null;
         return original.call(instance);
+    }
+
+    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithShadow(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/OrderedText;III)I", ordinal = 0))
+    private int removeHeaderShadow(DrawContext instance, TextRenderer textRenderer, OrderedText text, int x, int y, int color, Operation<Integer> original) {
+        if (TabTweaksConfig.CONFIG.instance().removeHeaderShadow) return instance.drawText(textRenderer, text, x, y, color, false);
+        else return original.call(instance, textRenderer, text, x, y, color);
+    }
+
+    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithShadow(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/Text;III)I", ordinal = 0))
+    private int removeBodyShadow(DrawContext instance, TextRenderer textRenderer, Text text, int x, int y, int color, Operation<Integer> original) {
+        if (TabTweaksConfig.CONFIG.instance().removeBodyShadow) return instance.drawText(textRenderer, text, x, y, color, false);
+        else return original.call(instance, textRenderer, text, x, y, color);
+    }
+
+    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithShadow(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/OrderedText;III)I", ordinal = 1))
+    private int removeFooterShadow(DrawContext instance, TextRenderer textRenderer, OrderedText text, int x, int y, int color, Operation<Integer> original) {
+        if (TabTweaksConfig.CONFIG.instance().removeFooterShadow) return instance.drawText(textRenderer, text, x, y, color, false);
+        else return original.call(instance, textRenderer, text, x, y, color);
     }
 
 }

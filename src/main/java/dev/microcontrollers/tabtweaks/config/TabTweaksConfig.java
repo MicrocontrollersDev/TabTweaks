@@ -25,6 +25,9 @@ public class TabTweaksConfig {
     @SerialEntry public boolean removeHeader = false;
     @SerialEntry public boolean removeFooter = false;
     @SerialEntry public boolean removeHeads = false;
+    @SerialEntry public boolean removeHeaderShadow = false;
+    @SerialEntry public boolean removeBodyShadow = false;
+    @SerialEntry public boolean removeFooterShadow = false;
     @SerialEntry public boolean improvedHeads = true;
     @SerialEntry public boolean removePing = false;
     @SerialEntry public boolean showPingInTab = false;
@@ -60,7 +63,7 @@ public class TabTweaksConfig {
                                 .option(Option.createBuilder(int.class)
                                         .name(Text.literal("Max Players"))
                                         .description(OptionDescription.of(Text.of("Change the maximum number of players that can appear in the tab list. By default, Minecraft has a maximum of 80.")))
-                                        .binding(2, () -> config.maxTabPlayers, newVal -> config.maxTabPlayers = newVal)
+                                        .binding(80, () -> config.maxTabPlayers, newVal -> config.maxTabPlayers = newVal)
                                         .controller(opt -> IntegerSliderControllerBuilder.create(opt)
                                                 .range(1, 200)
                                                 .step(1))
@@ -75,6 +78,24 @@ public class TabTweaksConfig {
                                         .name(Text.literal("Remove Footer"))
                                         .description(OptionDescription.of(Text.of("Remove the tab list footer.")))
                                         .binding(defaults.removeFooter, () -> config.removeFooter, newVal -> config.removeFooter = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
+                                        .build())
+                                .option(Option.createBuilder(boolean.class)
+                                        .name(Text.literal("Remove Header Shadow"))
+                                        .description(OptionDescription.of(Text.of("Remove the shadow of the tab list header.")))
+                                        .binding(defaults.removeHeaderShadow, () -> config.removeHeaderShadow, newVal -> config.removeHeaderShadow = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
+                                        .build())
+                                .option(Option.createBuilder(boolean.class)
+                                        .name(Text.literal("Remove Body Shadow"))
+                                        .description(OptionDescription.of(Text.of("Remove the shadow of the player names in the body.")))
+                                        .binding(defaults.removeBodyShadow, () -> config.removeBodyShadow, newVal -> config.removeBodyShadow = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
+                                        .build())
+                                .option(Option.createBuilder(boolean.class)
+                                        .name(Text.literal("Remove Footer Shadow"))
+                                        .description(OptionDescription.of(Text.of("Remove the shadow of the tab list footer.")))
+                                        .binding(defaults.removeFooterShadow, () -> config.removeFooterShadow, newVal -> config.removeFooterShadow = newVal)
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .option(Option.createBuilder(boolean.class)
