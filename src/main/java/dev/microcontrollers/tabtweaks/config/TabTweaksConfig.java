@@ -31,6 +31,7 @@ public class TabTweaksConfig {
     @SerialEntry public boolean improvedHeads = true;
     @SerialEntry public boolean removePing = false;
     @SerialEntry public boolean showPingInTab = false;
+    @SerialEntry public boolean removePingShadow = false;
     @SerialEntry public boolean scalePingDisplay = false;
     @SerialEntry public boolean hideFalsePing = false;
 
@@ -123,13 +124,19 @@ public class TabTweaksConfig {
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .option(Option.createBuilder(boolean.class)
+                                        .name(Text.literal("Remove Numerical Ping Shadow"))
+                                        .description(OptionDescription.of(Text.of("Removes the shadow on the numerical ping.")))
+                                        .binding(defaults.removePingShadow, () -> config.removePingShadow, newVal -> config.removePingShadow = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
+                                        .build())
+                                .option(Option.createBuilder(boolean.class)
                                         .name(Text.literal("Scale Numerical Ping"))
                                         .description(OptionDescription.of(Text.of("Scales the ping display to make it smaller.")))
                                         .binding(defaults.scalePingDisplay, () -> config.scalePingDisplay, newVal -> config.scalePingDisplay = newVal)
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .option(Option.createBuilder(boolean.class)
-                                        .name(Text.literal("Hide Fake Ping"))
+                                        .name(Text.literal("Hide Fake Numerical Ping"))
                                         .description(OptionDescription.of(Text.of("Some servers force a ping of 0 or 1 or very high numbers to hide players ping. This will hide the number from being displayed as it is useless.")))
                                         .binding(defaults.hideFalsePing, () -> config.hideFalsePing, newVal -> config.hideFalsePing = newVal)
                                         .controller(TickBoxControllerBuilder::create)

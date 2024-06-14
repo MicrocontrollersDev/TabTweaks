@@ -67,11 +67,12 @@ public class PlayerListHudMixin {
         else if (ping >= 400) color = TabTweaksConfig.CONFIG.instance().pingColorSix.getRGB();
         String pingString = String.valueOf(ping);
         if (TabTweaksConfig.CONFIG.instance().hideFalsePing && (ping <= 1 || ping >= 999)) pingString = "";
+        boolean shadow = !TabTweaksConfig.CONFIG.instance().removePingShadow;
         if (TabTweaksConfig.CONFIG.instance().scalePingDisplay) {
             context.getMatrices().scale(0.5F, 0.5F, 0.5F);
-            context.drawTextWithShadow(MinecraftClient.getInstance().textRenderer, pingString, 2 * (x + width) - MinecraftClient.getInstance().textRenderer.getWidth(String.valueOf(ping)) - 4, 2 * y + 4, color);
+            context.drawText(MinecraftClient.getInstance().textRenderer, pingString, 2 * (x + width) - MinecraftClient.getInstance().textRenderer.getWidth(String.valueOf(ping)) - 4, 2 * y + 4, color, shadow);
             context.getMatrices().scale(2F, 2F, 2F);
-        } else context.drawTextWithShadow(MinecraftClient.getInstance().textRenderer, pingString, x + width - MinecraftClient.getInstance().textRenderer.getWidth(String.valueOf(ping)), y, color);
+        } else context.drawText(MinecraftClient.getInstance().textRenderer, pingString, x + width - MinecraftClient.getInstance().textRenderer.getWidth(String.valueOf(ping)), y, color, shadow);
         ci.cancel();
     }
 
