@@ -23,5 +23,4 @@ public abstract class PlayerSkinDrawerMixin implements Head {
             context.getMatrices().translate(0.5F, 0.5F, 0F);
         }
     }
-
 }

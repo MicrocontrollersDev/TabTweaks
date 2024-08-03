@@ -31,6 +31,7 @@ public class PlayerListHudMixin {
     @Shadow
     @Final
     private MinecraftClient client;
+    @SuppressWarnings("InstantiationOfUtilityClass")
     @Unique
     PlayerSkinDrawer playerSkinDrawer = new PlayerSkinDrawer();
 
@@ -67,19 +68,27 @@ public class PlayerListHudMixin {
         else if (ping >= 400) color = TabTweaksConfig.CONFIG.instance().pingColorSix.getRGB();
         String pingString = String.valueOf(ping);
         if (TabTweaksConfig.CONFIG.instance().hideFalsePing && (ping <= 1 || ping >= 999)) pingString = "";
+        int pingStringLength = client.textRenderer.getWidth(pingString);
         boolean shadow = !TabTweaksConfig.CONFIG.instance().removePingShadow;
         if (TabTweaksConfig.CONFIG.instance().scalePingDisplay) {
             context.getMatrices().scale(0.5F, 0.5F, 0.5F);
-            context.drawText(MinecraftClient.getInstance().textRenderer, pingString, 2 * (x + width) - MinecraftClient.getInstance().textRenderer.getWidth(String.valueOf(ping)) - 4, 2 * y + 4, color, shadow);
+            context.drawText(client.textRenderer, pingString, 2 * (x + width) - pingStringLength - 4, 2 * y + 4, color, shadow);
             context.getMatrices().scale(2F, 2F, 2F);
-        } else context.drawText(MinecraftClient.getInstance().textRenderer, pingString, x + width - MinecraftClient.getInstance().textRenderer.getWidth(String.valueOf(ping)), y, color, shadow);
+        } else context.drawText(client.textRenderer, pingString, x + width - pingStringLength, y, color, shadow);
         ci.cancel();
+    }
+
+    @ModifyConstant(method = "render", constant = @Constant(intValue = 13))
+    private int changeWidgetWidth(int original) {
+        return TabTweaksConfig.CONFIG.instance().showPingInTab ? 30 : original;
     }
 
     @Inject(method = "render", at = @At("HEAD"))
     private void moveTabDown(DrawContext context, int scaledWindowWidth, Scoreboard scoreboard, ScoreboardObjective objective, CallbackInfo ci) {
         float distance = TabTweaksConfig.CONFIG.instance().moveTabBelowBossBars
-                ? ((Shifter) client.inGameHud.getBossBarHud()).tabTweaks$getShift()
+                ? ((Shifter) client.inGameHud.getBossBarHud()).tabTweaks$getShift() > TabTweaksConfig.CONFIG.instance().moveTabDown
+                    ? ((Shifter) client.inGameHud.getBossBarHud()).tabTweaks$getShift()
+                    : TabTweaksConfig.CONFIG.instance().moveTabDown
                 : TabTweaksConfig.CONFIG.instance().moveTabDown;
         context.getMatrices().translate(0, distance, 0);
     }
@@ -113,6 +122,7 @@ public class PlayerListHudMixin {
     @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithShadow(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/Text;III)I"), index = 2)
     private int modifyNamePosition(int x) {
         if (TabTweaksConfig.CONFIG.instance().removeHeads) return x - 8;
+        else if (TabTweaksConfig.CONFIG.instance().improvedHeads) return x + 1;
         return x;
     }
 
@@ -145,5 +155,4 @@ public class PlayerListHudMixin {
         if (TabTweaksConfig.CONFIG.instance().removeFooterShadow) return instance.drawText(textRenderer, text, x, y, color, false);
         else return original.call(instance, textRenderer, text, x, y, color);
     }
-
 }

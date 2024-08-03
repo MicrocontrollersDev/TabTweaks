@@ -36,7 +36,7 @@ public class TabTweaksConfig {
     @SerialEntry public boolean hideFalsePing = false;
 
     @SerialEntry public float moveTabDown = 10F;
-    @SerialEntry public boolean moveTabBelowBossBars = false;
+    @SerialEntry public boolean moveTabBelowBossBars = true;
 
     @SerialEntry public Color tabHeaderColor = new Color(0, 0, 0, 128);
     @SerialEntry public Color tabBodyColor = new Color(0, 0, 0, 128);

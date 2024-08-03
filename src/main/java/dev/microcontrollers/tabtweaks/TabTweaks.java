@@ -8,5 +8,4 @@ public class TabTweaks implements ModInitializer {
 	public void onInitialize() {
 		TabTweaksConfig.CONFIG.load();
 	}
-
 }

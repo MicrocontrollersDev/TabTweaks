@@ -24,5 +24,4 @@ public class BossBarHudMixin implements Shifter {
     public int tabTweaks$getShift() {
         return distance;
     }
-
 }
