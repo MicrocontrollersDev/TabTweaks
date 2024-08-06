@@ -4,6 +4,8 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
+import com.mojang.authlib.GameProfile;
 import dev.microcontrollers.tabtweaks.Head;
 import dev.microcontrollers.tabtweaks.Shifter;
 import dev.microcontrollers.tabtweaks.config.TabTweaksConfig;
@@ -19,10 +21,7 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.objectweb.asm.Opcodes;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -154,5 +153,10 @@ public class PlayerListHudMixin {
     private int removeFooterShadow(DrawContext instance, TextRenderer textRenderer, OrderedText text, int x, int y, int color, Operation<Integer> original) {
         if (TabTweaksConfig.CONFIG.instance().removeFooterShadow) return instance.drawText(textRenderer, text, x, y, color, false);
         else return original.call(instance, textRenderer, text, x, y, color);
+    }
+
+    @WrapWithCondition(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/PlayerSkinDrawer;draw(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/util/Identifier;IIIZZ)V"))
+    private boolean removeNpcHeads(DrawContext context, Identifier texture, int x, int y, int size, boolean hatVisible, boolean upsideDown, @Local GameProfile gameProfile) {
+        return !(TabTweaksConfig.CONFIG.instance().removeNpcHeads && gameProfile.getId().version() == 2);
     }
 }

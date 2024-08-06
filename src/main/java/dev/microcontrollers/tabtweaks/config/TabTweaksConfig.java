@@ -21,10 +21,13 @@ public class TabTweaksConfig {
                     .build())
             .build();
 
+    // TODO: @SerialEntry public boolean removeNpcs = false;
+
     @SerialEntry public int maxTabPlayers = 80;
     @SerialEntry public boolean removeHeader = false;
     @SerialEntry public boolean removeFooter = false;
     @SerialEntry public boolean removeHeads = false;
+    @SerialEntry public boolean removeNpcHeads = false;
     @SerialEntry public boolean removeHeaderShadow = false;
     @SerialEntry public boolean removeBodyShadow = false;
     @SerialEntry public boolean removeFooterShadow = false;
@@ -99,9 +102,15 @@ public class TabTweaksConfig {
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .option(Option.<Boolean>createBuilder()
-                                        .name(Text.translatable("tab-tweaks.remove-player-heads"))
-                                        .description(OptionDescription.of(Text.translatable("tab-tweaks.remove-player-heads.description")))
+                                        .name(Text.translatable("tab-tweaks.remove-heads"))
+                                        .description(OptionDescription.of(Text.translatable("tab-tweaks.remove-heads.description")))
                                         .binding(defaults.removeHeads, () -> config.removeHeads, newVal -> config.removeHeads = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
+                                        .build())
+                                .option(Option.<Boolean>createBuilder()
+                                        .name(Text.translatable("tab-tweaks.remove-npc-heads"))
+                                        .description(OptionDescription.of(Text.translatable("tab-tweaks.remove-npc-heads.description")))
+                                        .binding(defaults.removeNpcHeads, () -> config.removeNpcHeads, newVal -> config.removeNpcHeads = newVal)
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .option(Option.<Boolean>createBuilder()
