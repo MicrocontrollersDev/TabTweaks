@@ -19,6 +19,8 @@
   "tab-tweaks.remove-npc-heads.description": "Only remove NPC heads from the tab list.",
   "tab-tweaks.improved-player-head-hats": "Improved Head Hats",
   "tab-tweaks.improved-player-head-hats.description": "Show the full hat layer when rendering the head.",
+  "tab-tweaks.remove-objectives": "Remove Objectives",
+  "tab-tweaks.remove-objectives.description": "Remove objectives, such as hearts, from the tab list.",
   "tab-tweaks.remove-ping": "Remove Ping",
   "tab-tweaks.remove-ping.description": "Remove ping from the tab list.",
   "tab-tweaks.show-numerical-ping": "Show Numerical Ping",

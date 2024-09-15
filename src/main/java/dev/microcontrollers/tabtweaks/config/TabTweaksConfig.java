@@ -32,6 +32,7 @@ public class TabTweaksConfig {
     @SerialEntry public boolean removeBodyShadow = false;
     @SerialEntry public boolean removeFooterShadow = false;
     @SerialEntry public boolean improvedHeads = true;
+    @SerialEntry public boolean removeObjectives = false;
     @SerialEntry public boolean removePing = false;
     @SerialEntry public boolean showPingInTab = false;
     @SerialEntry public boolean removePingShadow = false;
@@ -117,6 +118,12 @@ public class TabTweaksConfig {
                                         .name(Text.translatable("tab-tweaks.improved-player-head-hats"))
                                         .description(OptionDescription.of(Text.translatable("tab-tweaks.improved-player-head-hats.description")))
                                         .binding(defaults.improvedHeads, () -> config.improvedHeads, newVal -> config.improvedHeads = newVal)
+                                        .controller(TickBoxControllerBuilder::create)
+                                        .build())
+                                .option(Option.<Boolean>createBuilder()
+                                        .name(Text.translatable("tab-tweaks.remove-objectives"))
+                                        .description(OptionDescription.of(Text.translatable("tab-tweaks.remove-objectives.description")))
+                                        .binding(defaults.removeObjectives, () -> config.removeObjectives, newVal -> config.removeObjectives = newVal)
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .option(Option.<Boolean>createBuilder()

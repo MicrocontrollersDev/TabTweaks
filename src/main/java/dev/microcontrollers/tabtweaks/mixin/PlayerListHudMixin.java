@@ -159,4 +159,9 @@ public class PlayerListHudMixin {
     private boolean removeNpcHeads(DrawContext context, Identifier texture, int x, int y, int size, boolean hatVisible, boolean upsideDown, @Local GameProfile gameProfile) {
         return !(TabTweaksConfig.CONFIG.instance().removeNpcHeads && gameProfile.getId().version() == 2);
     }
+
+    @ModifyVariable(method = "render", at = @At("HEAD"), argsOnly = true)
+    private ScoreboardObjective removeObjectives(ScoreboardObjective objective) {
+        return TabTweaksConfig.CONFIG.instance().removeObjectives ? null : objective;
+    }
 }
