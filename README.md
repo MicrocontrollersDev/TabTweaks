@@ -1,3 +1,5 @@
+# Moved to https://codeberg.org/MicrocontrollersDev/TabTweaks
+
 # Tab Tweaks
 
 Improvements and customization for Minecraft's Tab / Player List HUD
